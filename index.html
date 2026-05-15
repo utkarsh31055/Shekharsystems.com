@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShekharSystems — AI & Web Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --panel-1: #111111;
+            --panel-2: #161616;
+            --border: rgba(255, 255, 255, 0.07);
+            --text-main: #e8e6e1;
+            --text-muted: rgba(255, 255, 255, 0.35);
+            --accent: #c8f135;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: "Instrument Sans", sans-serif;
+            font-weight: 400;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3, .serif {
+            font-family: "Instrument Serif", serif;
+            font-weight: 400;
+        }
+        em, .italic, h1 i, h2 i {
+            font-style: italic;
+            color: var(--accent);
+        }
+        .mono {
+            font-family: "IBM Plex Mono", monospace;
+        }
+        .eyebrow {
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* LAYOUT & UTILS */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 4vw;
+        }
+        .flex { display: flex; }
+        .grid-split {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .relative { position: relative; }
+
+        /* OVERLAYS */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-size: 80px 80px;
+            background-image: 
+                linear-gradient(to right, var(--border) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 10%, transparent 80%);
+            pointer-events: none;
+            z-index: -2;
+        }
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.028;
+            pointer-events: none;
+            z-index: 100;
+        }
+        #bgCanvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* CUSTOM CURSOR */
+        #cursor-dot, #cursor-ring {
+            position: fixed; top: 0; left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+        #cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--accent);
+            transition: width 0.2s, height 0.2s;
+        }
+        #cursor-ring {
+            width: 32px; height: 32px;
+            border: 1px solid var(--text-muted);
+            transition: width 0.2s, height 0.2s, border-color 0.2s;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            padding: 1.5rem 4vw;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 50;
+            border-bottom: 1px solid var(--border);
+            background: rgba(13,13,13,0.8);
+            backdrop-filter: blur(12px);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .nav-star { width: 22px; height: 22px; color: var(--accent); animation: spin 45s linear infinite; display: block; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+        .hover-target:hover { color: var(--text-main); }
+        .btn {
+            background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border);
+            padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.85rem; text-decoration: none;
+            transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        .btn:hover { background: var(--text-main); color: var(--bg-color); border-color: var(--text-main); }
+        .btn-accent { background: var(--accent); color: var(--bg-color); border-color: var(--accent); }
+        .btn-accent:hover { background: #d4f757; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* HERO */
+        .hero { padding: 0; min-height: 100vh; display: flex; align-items: stretch; }
+        .hero h1 { font-size: 5rem; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        .hero p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; max-width: 400px; }
+        
+        .hero-left { flex: 0 0 50%; display: flex; flex-direction: column; justify-content: center; padding-left: max(4vw, calc((100vw - 1400px) / 2 + 4vw)); padding-right: 4vw; z-index: 10; }
+        .hero-right { flex: 0 0 50%; display: flex; flex-direction: column; height: 100vh; margin: 0; padding: 0; border-left: 1px solid var(--border); }
+        .panel { background: var(--panel-1); overflow: hidden; position: relative; }
+        
+        .panel-top { flex: 1; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; padding-top: 100px; }
+        #heroCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        
+        .sys-label { display: inline-flex; align-items: center; gap: 0.5rem; font-family: "IBM Plex Mono"; font-size: 0.75rem; margin-bottom: 1rem;}
+        .pulse-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); animation: pulse 2s infinite; }
+        .clock { align-self: flex-end; font-family: "IBM Plex Mono"; font-size: 0.75rem; color: var(--text-muted); text-align: right; }
+        
+        .orbit-visual {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 200px; height: 200px;
+        }
+        .ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 1px dashed var(--border); }
+        .ring-1 { width: 100%; height: 100%; animation: rot 8s linear infinite; }
+        .ring-2 { width: 70%; height: 70%; animation: rot 12s linear reverse infinite; }
+        .ring-3 { width: 40%; height: 40%; animation: rot 6s linear infinite; }
+        .orbit-dot { position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; transform: translateX(-50%); box-shadow: 0 0 8px var(--accent); }
+        .center-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 4px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 20px 8px rgba(200,241,53,0.2); }
+
+        .panel-bottom { padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; background: var(--panel-2); transition: background 0.3s; cursor: none; }
+        .panel-bottom:hover { background: rgba(255,255,255,0.05); }
+        .contact-info { display: flex; align-items: center; gap: 1rem; }
+        .avatar { width: 40px; height: 40px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: "Instrument Serif"; font-size: 1.2rem; }
+        .contact-text h3 { font-size: 1rem; margin-bottom: 0.2rem; font-family: "Instrument Sans"; }
+        .contact-text p { font-size: 0.8rem; color: var(--text-muted); font-family: "IBM Plex Mono"; }
+        .arrow-circle { width: 40px; height: 40px; border: 1px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
+        .arrow-circle svg { fill: var(--accent); width: 14px; }
+        .panel-bottom:hover .arrow-circle { transform: translate(4px, -4px); }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes rot { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        /* TICKER */
+        .ticker { padding: 3rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; overflow: hidden; white-space: nowrap; }
+        .ticker-track { display: flex; gap: 4rem; animation: scroll-left 30s linear infinite; }
+        .ticker-item { font-family: "Instrument Serif"; font-size: 1.5rem; color: var(--text-muted); }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* SERVICES */
+        .services { padding: 8rem 0; }
+        .section-header { margin-bottom: 4rem; }
+        .section-header h2 { font-size: 3.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        
+        .card { background: var(--panel-1); border: 1px solid var(--border); padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.3s; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease; }
+        .card:hover::before { transform: scaleX(1); }
+        .card-num { font-family: "IBM Plex Mono"; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2rem; display: block; }
+        .card h3 { font-size: 1.5rem; margin-bottom: 1rem; font-family: "Instrument Sans"; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem; }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border: 1px solid var(--border); border-radius: 20px; font-size: 0.7rem; font-family: "IBM Plex Mono"; background: rgba(255,255,255,0.02); }
+        .badge.live { color: var(--accent); border-color: rgba(200,241,53,0.3); background: rgba(200,241,53,0.05); }
+        .card.dimmed { opacity: 0.5; pointer-events: none; }
+
+        /* SCROLL STATEMENT */
+        .manifesto { height: 280vh; position: relative; }
+        .sticky-wrap { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .manifesto-text { font-size: 4.5rem; text-align: center; max-width: 900px; line-height: 1.1; font-family: "Instrument Serif"; }
+        .line { display: block; color: rgba(255,255,255,0.06); transition: color 0.3s ease; }
+        .line.active { color: #fff; }
+        .line.active.accent-line { color: var(--accent); font-style: italic; }
+        .progress-bar-container { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); width: 200px; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+        .progress-track { width: 100%; height: 2px; background: rgba(255,255,255,0.1); }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent); }
+        .progress-label { font-family: "IBM Plex Mono"; font-size: 0.75rem; color: var(--accent); }
+
+        /* PROCESS */
+        .process { padding: 8rem 0; }
+        .process-row { border-top: 1px solid var(--border); padding: 2rem 0; display: grid; grid-template-columns: 0.5fr 1fr 2fr; gap: 2rem; transition: padding-left 0.3s; }
+        .process-row:last-child { border-bottom: 1px solid var(--border); }
+        .process-row:hover { padding-left: 1.5rem; }
+        .process-row:hover h3 { color: var(--accent); }
+        .process-row .num { font-family: "IBM Plex Mono"; color: var(--text-muted); }
+        .process-row h3 { font-family: "Instrument Sans"; font-size: 1.2rem; transition: color 0.3s; }
+        .process-row p { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; }
+
+        /* CTA */
+        .cta { padding: 10rem 0; border-top: 1px solid var(--border); }
+        .cta h2 { font-size: 4rem; line-height: 1; margin-bottom: 2rem; }
+        .cta-btns { display: flex; gap: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .stat-item { border-left: 1px solid var(--border); padding-left: 1.5rem; }
+        .stat-val { font-family: "Instrument Serif"; font-size: 3.5rem; font-style: italic; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
+        .stat-label { font-family: "IBM Plex Mono"; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* FOOTER */
+        footer { padding: 2rem 4vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-muted); }
+        .footer-links { display: flex; gap: 2rem; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--text-main); }
+
+        @media (max-width: 1024px) {
+            .grid-split, .grid-3 { grid-template-columns: 1fr; }
+            .hero { padding-top: 8rem; }
+            .hero h1 { font-size: 4rem; }
+            .process-row { grid-template-columns: 1fr; gap: 1rem; }
+            .manifesto-text { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="grain"></div>
+    <canvas id="bgCanvas"></canvas>
+
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <nav>
+        <div class="nav-logo" style="font-family: 'Instrument Serif', serif; font-size: 1.8rem;">
+            <svg class="nav-star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="12" y1="3" x2="12" y2="21" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="5.636" y1="5.636" x2="18.364" y2="18.364" />
+              <line x1="5.636" y1="18.364" x2="18.364" y2="5.636" />
+            </svg>
+            ShekharSystems
+        </div>
+        <div class="nav-links" style="font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; gap: 3.5rem;">
+            <a href="#services" class="hover-target">Services</a>
+            <a href="#process" class="hover-target">Process</a>
+            <a href="#about" class="hover-target">Contact</a>
+        </div>
+        <a href="#contact" class="btn hover-target" style="background: var(--accent); color: #000; border-radius: 2px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; padding: 0.8rem 1.6rem; border: none;">GET STARTED</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-left">
+            <div style="display:flex;gap:10px;margin-bottom:1.5rem">
+                <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">AI SYSTEMS</span>
+                <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">WEB STUDIO</span>
+            </div>
+            <h1>Websites &<br>Automations that<br><i>work for you.</i></h1>
+            <p style="margin-bottom: 2rem; max-width: 450px;">We build premium websites and AI-powered customer support systems for businesses that want results, not just deliverables.</p>
+            <div style="display:flex; gap:1rem;">
+                <a href="#services" class="btn hover-target" style="background:#e8e6e1;color:#0d0d0d;border:none;">VIEW SERVICES</a>
+                <a href="#pricing" class="btn hover-target" style="background:transparent;color:var(--text-muted);">SEE PRICING</a>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div class="panel panel-top">
+                <canvas id="heroCanvas"></canvas>
+                <div class="relative z-10 w-full h-full flex flex-col justify-between" style="height: 100%;">
+                    <div class="sys-label"><div class="pulse-dot"></div> System Active</div>
+                    
+                    <div class="orbit-visual">
+                        <div class="ring ring-1"><div class="orbit-dot"></div></div>
+                        <div class="ring ring-2"></div>
+                        <div class="ring ring-3"></div>
+                        <div class="center-glow"></div>
+                    </div>
+
+                    <div class="clock" id="live-clock">00:00:00</div>
+                </div>
+            </div>
+            
+            <a href="#contact" class="panel panel-bottom hover-target" style="text-decoration:none; color:inherit; display:flex;">
+                <div class="contact-info">
+                    <div class="avatar">S</div>
+                    <div class="contact-text">
+                        <h3>Talk to us about your project</h3>
+                        <p>Free intro call &middot; Same day reply</p>
+                    </div>
+                </div>
+                <div class="arrow-circle">
+                    <svg viewBox="0 0 24 24"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <div class="ticker">
+        <div class="ticker-track">
+            <span class="ticker-item">Design Systems &mdash;</span>
+            <span class="ticker-item">AI Agents &mdash;</span>
+            <span class="ticker-item">Web Architecture &mdash;</span>
+            <span class="ticker-item">Conversion Optimisation &mdash;</span>
+            <span class="ticker-item">Design Systems &mdash;</span>
+            <span class="ticker-item">AI Agents &mdash;</span>
+            <span class="ticker-item">Web Architecture &mdash;</span>
+            <span class="ticker-item">Conversion Optimisation &mdash;</span>
+        </div>
+    </div>
+
+    <section id="services" class="services container" style="border-top:1px solid var(--border); padding-top:4rem;">
+        <div class="grid-split" style="margin-bottom: 4rem;">
+            <h2 style="font-size: 4rem; line-height: 1.1;">Systems that<br><i>scale with you</i></h2>
+            <p style="color: var(--text-muted); text-align: right; max-width: 350px; margin-left: auto;">Every product we ship is engineered to generate value from day one — not sit on a server.</p>
+        </div>
+        <div class="grid-3" style="border-top: 1px solid var(--border); padding-top: 2rem;">
+            <div class="card hover-target" style="border:none; padding:2rem 1rem;">
+                <span class="card-num">01</span>
+                <div style="width:40px;height:40px;border:1px solid var(--accent);border-radius:50%;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;position:relative;">
+                   <div style="position:absolute;width:100%;height:1px;background:var(--accent);"></div>
+                   <div style="position:absolute;width:1px;height:100%;background:var(--accent);"></div>
+                </div>
+                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Website Building</h3>
+                <p>Premium, conversion-focused websites engineered for speed, credibility, and growth. From landing pages to full multi-page builds.</p>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
+                    <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">LEARN MORE &rarr;</span>
+                    <div class="badge live">LIVE</div>
+                </div>
+            </div>
+            <div class="card hover-target" style="border:none; border-left:1px solid var(--border); border-right:1px solid var(--border); padding:2rem;">
+                <span class="card-num">02</span>
+                <div style="width:40px;height:40px;border:1px solid var(--accent);border-radius:4px;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;">
+                   <div style="width:4px;height:4px;background:var(--accent);"></div>
+                </div>
+                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Automated Customer<br>Support</h3>
+                <p>AI agents that handle enquiries, qualify leads, book calls, and resolve support tickets — 24/7, without hiring a team.</p>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
+                    <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">LEARN MORE &rarr;</span>
+                    <div class="badge live">LIVE</div>
+                </div>
+            </div>
+            <div class="card dimmed" style="border:none; padding:2rem;">
+                <span class="card-num">03</span>
+                <div style="position:relative;width:40px;height:40px;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;">
+                   <div style="position:absolute;width:100%;height:1px;background:var(--accent);"></div>
+                   <div style="position:absolute;width:1px;height:100%;background:var(--accent);"></div>
+                </div>
+                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">More Coming Soon</h3>
+                <p>We're building new service offerings. Follow us or reach out to get early access.</p>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
+                    <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">IN DEVELOPMENT</span>
+                    <div class="badge">SOON</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="manifesto">
+        <div class="sticky-wrap container">
+            <div class="manifesto-text" id="manifestoText">
+                <span class="line">The best systems</span>
+                <span class="line accent-line">run silently.</span>
+                <span class="line">No maintenance.</span>
+                <span class="line">No babysitting.</span>
+                <span class="line">Just results.</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-label" id="scrollProgressLabel">0%</div>
+                <div class="progress-track"><div class="progress-fill" id="scrollProgressFill"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="process" class="process container">
+        <span class="eyebrow">Methodology</span>
+        <div class="process-list">
+            <div class="process-row hover-target">
+                <div class="num">01</div>
+                <h3>Discovery Call</h3>
+                <p>We learn your goals, pain points, and what success looks like. Free, no commitment, same-day availability.</p>
+            </div>
+            <div class="process-row hover-target">
+                <div class="num">02</div>
+                <h3>Proposal & Scope</h3>
+                <p>You get a clear proposal — scope, timeline, pricing. No hidden fees. You approve before anything starts.</p>
+            </div>
+            <div class="process-row hover-target">
+                <div class="num">03</div>
+                <h3>Build & Review</h3>
+                <p>We build fast and share progress. You review, give feedback, we refine. You're always in the loop.</p>
+            </div>
+            <div class="process-row hover-target">
+                <div class="num">04</div>
+                <h3>Launch & Support</h3>
+                <p>We handle the go-live. Then stay on hand for tweaks, updates, and anything that comes up after.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="cta container grid-split">
+        <div>
+            <h2>Ready to <i>upgrade</i><br>your foundation?</h2>
+            <div class="cta-btns mt-4">
+                <a href="#" class="btn btn-accent hover-target">Book Intro Call</a>
+                <a href="#" class="btn hover-target">Email Us</a>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-val">24h</div>
+                <div class="stat-label">Response Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val">100%</div>
+                <div class="stat-label">Satisfaction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val">2wk</div>
+                <div class="stat-label">Avg Delivery</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val">∞</div>
+                <div class="stat-label">Scalability</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="nav-logo" style="font-family: 'Instrument Serif', serif; font-size: 1.2rem;">
+            <svg class="nav-star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:14px;height:14px;color:var(--text-muted)">
+              <line x1="12" y1="3" x2="12" y2="21" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="5.636" y1="5.636" x2="18.364" y2="18.364" />
+              <line x1="5.636" y1="18.364" x2="18.364" y2="5.636" />
+            </svg>
+            ShekharSystems
+        </div>
+        <div class="footer-links">
+            <a href="#" class="hover-target">Twitter X</a>
+            <a href="#" class="hover-target">LinkedIn</a>
+            <a href="#" class="hover-target">Dribbble</a>
+        </div>
+        <div>&copy; 2026 Studio. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // CURSOR
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let ringX = mouseX;
+        let ringY = mouseY;
+        
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.left = mouseX + 'px';
+            cursorDot.style.top = mouseY + 'px';
+        });
+
+        // Hover effect for cursor
+        document.querySelectorAll('.hover-target, a, button, .card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorDot.style.width = '16px';
+                cursorDot.style.height = '16px';
+                cursorRing.style.width = '48px';
+                cursorRing.style.height = '48px';
+                cursorRing.style.borderColor = 'var(--accent)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorDot.style.width = '8px';
+                cursorDot.style.height = '8px';
+                cursorRing.style.width = '32px';
+                cursorRing.style.height = '32px';
+                cursorRing.style.borderColor = 'var(--text-muted)';
+            });
+        });
+
+        const renderRing = () => {
+            ringX += (mouseX - ringX) * 0.12;
+            ringY += (mouseY - ringY) * 0.12;
+            cursorRing.style.left = ringX + 'px';
+            cursorRing.style.top = ringY + 'px';
+            requestAnimationFrame(renderRing);
+        };
+        renderRing();
+
+        // CLOCK
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour12: false });
+            document.getElementById('live-clock').textContent = time + ' UTC';
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // BACKGROUND CANVAS (Noise dots)
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let bgDots = [];
+        
+        function initBgCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+            bgDots = [];
+            
+            const cols = 22;
+            const rows = 14;
+            const xStep = bgCanvas.width / cols;
+            const yStep = bgCanvas.height / rows;
+
+            for(let r=0; r<=rows; r++) {
+                for(let c=0; c<=cols; c++) {
+                    bgDots.push({
+                        baseX: c * xStep,
+                        baseY: r * yStep,
+                        offset: Math.random() * Math.PI * 2,
+                        speed: 0.5 + Math.random() * 0.5
+                    });
+                }
+            }
+        }
+        
+        window.addEventListener('resize', initBgCanvas);
+        initBgCanvas();
+
+        let timeOffset = 0;
+        function renderBg() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            bgCtx.fillStyle = 'rgba(200, 241, 53, 0.15)';
+            timeOffset += 0.01;
+
+            bgDots.forEach(dot => {
+                const x = dot.baseX + Math.sin(timeOffset * dot.speed + dot.offset) * 15;
+                const y = dot.baseY + Math.cos(timeOffset * dot.speed + dot.offset * 2) * 15;
+                bgCtx.beginPath();
+                bgCtx.arc(x, y, 1, 0, Math.PI * 2);
+                bgCtx.fill();
+            });
+
+            // horizontal lines connecting rows
+            bgCtx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+            const cols = 22;
+            for(let i=0; i<bgDots.length; i+= (cols+1)) {
+                bgCtx.beginPath();
+                for(let j=0; j<=cols && (i+j)<bgDots.length; j++) {
+                    const dot = bgDots[i+j];
+                    const x = dot.baseX + Math.sin(timeOffset * dot.speed + dot.offset) * 15;
+                    const y = dot.baseY + Math.cos(timeOffset * dot.speed + dot.offset * 2) * 15;
+                    if(j===0) bgCtx.moveTo(x,y);
+                    else bgCtx.lineTo(x,y);
+                }
+                bgCtx.stroke();
+            }
+
+            requestAnimationFrame(renderBg);
+        }
+        renderBg();
+
+        // HERO CANVAS (Cosmic Starfield Depth)
+        const heroCanvas = document.getElementById('heroCanvas');
+        const heroCtx = heroCanvas.getContext('2d');
+        
+        let stars = [];
+        const numStars = 500;
+        
+        function initHeroCanvas() {
+            const rect = heroCanvas.parentElement.getBoundingClientRect();
+            // High res canvas
+            heroCanvas.width = rect.width * 2;
+            heroCanvas.height = rect.height * 2;
+            
+            stars = [];
+            for(let i=0; i<numStars; i++) {
+                stars.push({
+                    x: (Math.random() - 0.5) * 3000,
+                    y: (Math.random() - 0.5) * 3000,
+                    z: Math.random() * 2000
+                });
+            }
+        }
+        window.addEventListener('resize', initHeroCanvas);
+        initHeroCanvas();
+
+        function renderHero() {
+            // Smooth solid background to remove trails
+            heroCtx.fillStyle = 'rgba(13, 13, 13, 1)';
+            heroCtx.fillRect(0, 0, heroCanvas.width, heroCanvas.height);
+            
+            const centerX = heroCanvas.width / 2;
+            const centerY = heroCanvas.height / 2;
+            
+            for(let i=0; i<numStars; i++) {
+                let star = stars[i];
+                star.z -= 0.6; // Extremely peaceful flow speed
+                
+                if(star.z <= 0) {
+                    star.z = 2000;
+                    star.x = (Math.random() - 0.5) * 3000;
+                    star.y = (Math.random() - 0.5) * 3000;
+                }
+                
+                let scale = 1000 / star.z;
+                let projX = centerX + star.x * scale;
+                let projY = centerY + star.y * scale;
+                
+                let opacity = Math.max(0, 1 - (star.z / 2000));
+                
+                heroCtx.beginPath();
+                // Subtly larger dots for cosmic elegance
+                heroCtx.arc(projX, projY, 1.2 * scale, 0, Math.PI * 2);
+                heroCtx.fillStyle = `rgba(200, 241, 53, ${opacity * 0.4})`;
+                heroCtx.fill();
+            }
+            
+            requestAnimationFrame(renderHero);
+        }
+        renderHero();
+
+        // GSAP SCROLL MANIFESTO
+        gsap.registerPlugin(ScrollTrigger);
+
+        const lines = document.querySelectorAll('.line');
+        const totalLines = lines.length;
+
+        ScrollTrigger.create({
+            trigger: ".manifesto",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.1,
+            onUpdate: (self) => {
+                const progress = self.progress;
+                document.getElementById('scrollProgressFill').style.width = `${progress * 100}%`;
+                document.getElementById('scrollProgressLabel').textContent = `${Math.round(progress * 100)}%`;
+
+                const activeIdx = Math.floor(progress * totalLines);
+                
+                lines.forEach((line, idx) => {
+                    if (idx === activeIdx || (idx === totalLines - 1 && activeIdx >= totalLines)) {
+                        line.classList.add('active');
+                        line.style.color = line.classList.contains('accent-line') ? 'var(--accent)' : '#fff';
+                    } else {
+                        line.classList.remove('active');
+                        line.style.color = 'rgba(255,255,255,0.06)';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
