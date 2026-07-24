@@ -28,6 +28,11 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+    </script>
     <style>
         :root {
             --bg-color: #0d0d0d;
@@ -39,11 +44,20 @@
             --accent: #c8f135;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             cursor: none;
+        }
+
+        *:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
         }
 
         body {
@@ -153,22 +167,49 @@
             display: flex; justify-content: space-between; align-items: center;
             z-index: 50;
             border-bottom: 1px solid var(--border);
-            background: rgba(13,13,13,0.8);
-            backdrop-filter: blur(12px);
+            background: rgba(13,13,13,0.85);
+            backdrop-filter: blur(16px);
         }
-        .nav-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .nav-logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit; }
         .nav-star { width: 22px; height: 22px; color: var(--accent); animation: spin 45s linear infinite; display: block; }
         .nav-links { display: flex; gap: 2rem; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
-        .hover-target:hover { color: var(--text-main); }
+        .nav-links a { 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            transition: color 0.3s ease; 
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-links a:hover,
+        .nav-links a.active { 
+            color: var(--text-main); 
+        }
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1.5px;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
         .btn {
             background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border);
-            padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.85rem; text-decoration: none;
-            transition: all 0.3s; position: relative; overflow: hidden;
+            padding: 0.65rem 1.4rem; border-radius: 4px; font-size: 0.85rem; text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;
+            display: inline-flex; align-items: center; justify-content: center;
+            min-height: 44px;
         }
-        .btn:hover { background: var(--text-main); color: var(--bg-color); border-color: var(--text-main); }
+        .btn:hover { 
+            background: var(--text-main); color: var(--bg-color); border-color: var(--text-main); 
+            transform: translateY(-1px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
         .btn-accent { background: var(--accent); color: var(--bg-color); border-color: var(--accent); }
-        .btn-accent:hover { background: #d4f757; }
+        .btn-accent:hover { background: #d4f757; border-color: #d4f757; color: var(--bg-color); }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
@@ -224,7 +265,7 @@
         .section-header h2 { font-size: 3.5rem; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         
-        .card { background: var(--panel-1); border: 1px solid var(--border); padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.3s; }
+        .card { background: var(--panel-1); border: 1px solid var(--border); padding: 2rem; position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s ease; }
         .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease; }
         .card:hover::before { transform: scaleX(1); }
         .card-num { font-family: "IBM Plex Mono"; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2rem; display: block; }
@@ -256,20 +297,139 @@
         .process-row h3 { font-family: "Instrument Sans"; font-size: 1.2rem; transition: color 0.3s; }
         .process-row p { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; }
 
-        /* CTA */
-        .cta { padding: 10rem 0; border-top: 1px solid var(--border); }
+        /* CTA & CONTACT CARD */
+        .cta { padding: 8rem 0; border-top: 1px solid var(--border); }
         .cta h2 { font-size: 4rem; line-height: 1; margin-bottom: 2rem; }
-        .cta-btns { display: flex; gap: 1rem; }
+        .cta-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
         .stat-item { border-left: 1px solid var(--border); padding-left: 1.5rem; }
         .stat-val { font-family: "Instrument Serif"; font-size: 3.5rem; font-style: italic; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
         .stat-label { font-family: "IBM Plex Mono"; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
 
+        .contact-card {
+            background: var(--panel-1);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 4px;
+            position: relative;
+        }
+        .contact-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .contact-card-title {
+            font-family: "Instrument Serif", serif;
+            font-size: 2.4rem;
+            color: var(--text-main);
+        }
+        .contact-card-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+        }
+        .contact-item {
+            margin-bottom: 1.5rem;
+        }
+        .contact-label {
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+        .contact-value {
+            font-family: "Instrument Sans", sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .contact-value:hover {
+            color: var(--accent);
+        }
+        .contact-note {
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            font-family: "IBM Plex Mono", monospace;
+        }
+
         /* FOOTER */
-        footer { padding: 2rem 4vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-muted); }
-        .footer-links { display: flex; gap: 2rem; }
-        .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
-        .footer-links a:hover { color: var(--text-main); }
+        footer { 
+            padding: 4rem 4vw 3rem 4vw; 
+            border-top: 1px solid var(--border); 
+            background: var(--bg-color); 
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 2fr;
+            gap: 4rem;
+        }
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .footer-tagline {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.8rem;
+            max-width: 320px;
+            line-height: 1.5;
+        }
+        .footer-details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .footer-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .footer-col-title {
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+        .footer-col-content {
+            font-family: "Instrument Sans", sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer-col-content:hover {
+            color: var(--accent);
+        }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 3rem auto 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
 
         @media (max-width: 1024px) {
             .grid-split, .grid-3, .grid-2 { grid-template-columns: 1fr; }
@@ -277,9 +437,10 @@
             .hero h1 { font-size: 4rem; }
             .process-row { grid-template-columns: 1fr; gap: 1rem; }
             .manifesto-text { font-size: 2.5rem; }
+            .footer-container { grid-template-columns: 1fr; gap: 2.5rem; }
         }
 
-        /* MOBILE OPTIMIZATIONS (untouched on desktop) */
+        /* MOBILE OPTIMIZATIONS */
         @media (hover: none) and (pointer: coarse) {
             * { cursor: auto !important; }
             #cursor-dot, #cursor-ring { display: none !important; }
@@ -294,7 +455,7 @@
             h3[style*="font-size: 1.8rem"] { font-size: 1.4rem !important; }
             
             /* Navbar */
-            .nav-links { display: none !important; }
+            .nav-links { gap: 1.5rem !important; font-size: 0.75rem !important; }
             .nav-logo { font-size: 1.2rem !important; }
             nav .btn { font-size: 0.75rem !important; padding: 0.7rem 1rem !important; }
             
@@ -312,6 +473,8 @@
             /* Cards */
             .card[style*="padding:3rem"] { padding: 1.5rem !important; }
             .card[style*="padding:2rem"] { padding: 1.5rem !important; }
+            .contact-card { padding: 1.5rem !important; }
+            .contact-phone-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
             
             /* Lists & Text */
             ul[style*="max-width: 480px"], ul[style*="color: #e8e6e1"] { font-size: 0.95rem !important; }
@@ -323,7 +486,7 @@
             .hero-left { 
                 flex: none !important; 
                 width: 100% !important; 
-                padding-top: 10rem !important; 
+                padding-top: 8rem !important; 
                 padding-bottom: 4rem !important;
                 padding-left: 4vw !important;
             }
@@ -343,354 +506,468 @@
             .stat-item { padding-left: 1rem !important; border-left-width: 2px !important; }
             
             /* Footer */
-            footer { flex-direction: column !important; align-items: flex-start !important; gap: 2.5rem !important; padding-bottom: 4rem !important; }
-            .footer-links { flex-direction: column !important; gap: 1.5rem !important; }
+            .footer-container { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+            .footer-details-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+            .footer-bottom { flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
-    <div class="grain"></div>
-    <canvas id="bgCanvas"></canvas>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
-    <div id="cursor-dot"></div>
-    <div id="cursor-ring"></div>
+    <div id="cursor-dot" aria-hidden="true"></div>
+    <div id="cursor-ring" aria-hidden="true"></div>
 
-    <nav>
-        <div class="nav-logo" style="font-family: 'Instrument Serif', serif; font-size: 1.8rem;">
-            <svg class="nav-star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <nav aria-label="Main Navigation">
+        <a href="#hero" class="nav-logo hover-target" style="font-family: 'Instrument Serif', serif; font-size: 1.8rem;" aria-label="ShekharSystems Home">
+            <svg class="nav-star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
               <line x1="12" y1="3" x2="12" y2="21" />
               <line x1="3" y1="12" x2="21" y2="12" />
               <line x1="5.636" y1="5.636" x2="18.364" y2="18.364" />
               <line x1="5.636" y1="18.364" x2="18.364" y2="5.636" />
             </svg>
             ShekharSystems
-        </div>
-        <div class="nav-links" style="font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; gap: 3.5rem;" aria-label="Main Navigation">
+        </a>
+        <div class="nav-links" style="font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;" aria-label="Section Links">
             <a href="#services" class="hover-target">Services</a>
             <a href="#process" class="hover-target">Process</a>
             <a href="#contact" class="hover-target">Contact</a>
         </div>
-        <a href="#contact" class="btn hover-target" style="background: var(--accent); color: #000; border-radius: 2px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; padding: 0.8rem 1.6rem; border: none;" aria-label="Book Strategy Call">BOOK STRATEGY CALL</a>
+        <a href="#contact" class="btn hover-target btn-accent" style="border-radius: 2px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; padding: 0.8rem 1.6rem; border: none;" aria-label="Book Strategy Call">BOOK STRATEGY CALL</a>
     </nav>
 
-    <section class="hero">
-        <div class="hero-left">
-            <div style="display:flex;gap:10px;margin-bottom:1.5rem">
-                <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">PREMIUM WEBSITES</span>
-                <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">FOR PERSONAL TRAINERS</span>
-            </div>
-            <h1 style="font-size: 4rem;">Premium websites that help personal trainers<br><i>get more clients.</i></h1>
-            <ul style="margin-bottom: 2.5rem; max-width: 480px; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; list-style: none; padding: 0;">
-                <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Build immediate credibility and trust.</li>
-                <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Search-friendly architecture for local discovery.</li>
-                <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Convert visitors into booked consultations.</li>
-                <li style="display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Automate enquiry handling with AI integration.</li>
-            </ul>
-            <div style="display:flex; gap:1rem;">
-                <a href="#contact" class="btn hover-target" style="background:#e8e6e1;color:#0d0d0d;border:none;">Book a Free Strategy Call</a>
-                <a href="#services" class="btn hover-target" style="background:transparent;color:var(--text-muted);">See How It Works</a>
-            </div>
-        </div>
-        <div class="hero-right">
-            <div class="panel panel-top">
-                <canvas id="heroCanvas"></canvas>
-                <div class="relative z-10 w-full h-full flex flex-col justify-between" style="height: 100%;">
-                    <div class="sys-label"><div class="pulse-dot"></div> System Active</div>
-                    
-                    <div class="orbit-visual">
-                        <div class="ring ring-1"><div class="orbit-dot"></div></div>
-                        <div class="ring ring-2"></div>
-                        <div class="ring ring-3"></div>
-                        <div class="center-glow"></div>
-                    </div>
-
-                    <div class="clock" id="live-clock">00:00:00</div>
+    <main>
+        <section class="hero" id="hero">
+            <div class="hero-left">
+                <div style="display:flex;gap:10px;margin-bottom:1.5rem">
+                    <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">PREMIUM WEBSITES</span>
+                    <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">FOR PERSONAL TRAINERS</span>
+                </div>
+                <h1 style="font-size: 4rem;">Premium websites that help personal trainers<br><i>get more clients.</i></h1>
+                <ul style="margin-bottom: 2.5rem; max-width: 480px; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Build immediate credibility and trust.</li>
+                    <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Search-friendly architecture for local discovery.</li>
+                    <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Convert visitors into booked consultations.</li>
+                    <li style="display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Automate enquiry handling with AI integration.</li>
+                </ul>
+                <div style="display:flex; gap:1rem; flex-wrap: wrap;">
+                    <a href="#contact" class="btn btn-accent hover-target">Book a Free Strategy Call</a>
+                    <a href="#services" class="btn hover-target" style="background:transparent;color:var(--text-muted);">See How It Works</a>
                 </div>
             </div>
-            
-            <a href="#contact" class="panel panel-bottom hover-target" style="text-decoration:none; color:inherit; display:flex;">
-                <div class="contact-info">
-                    <div class="avatar">S</div>
-                    <div class="contact-text">
-                        <h3>Talk to us about your project</h3>
-                        <p>Free intro call &middot; Same day reply</p>
+            <div class="hero-right">
+                <div class="panel panel-top">
+                    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+                    <div class="relative z-10 w-full h-full flex flex-col justify-between" style="height: 100%;">
+                        <div class="sys-label"><div class="pulse-dot"></div> System Active</div>
+                        
+                        <div class="orbit-visual" aria-hidden="true">
+                            <div class="ring ring-1"><div class="orbit-dot"></div></div>
+                            <div class="ring ring-2"></div>
+                            <div class="ring ring-3"></div>
+                            <div class="center-glow"></div>
+                        </div>
+
+                        <div class="clock" id="live-clock">00:00:00</div>
                     </div>
                 </div>
-                <div class="arrow-circle">
-                    <svg viewBox="0 0 24 24"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                
+                <a href="#contact" class="panel panel-bottom hover-target" style="text-decoration:none; color:inherit; display:flex;" aria-label="Talk to us about your project">
+                    <div class="contact-info">
+                        <div class="avatar" aria-hidden="true">S</div>
+                        <div class="contact-text">
+                            <h3>Talk to us about your project</h3>
+                            <p>Free intro call &middot; Same day reply</p>
+                        </div>
+                    </div>
+                    <div class="arrow-circle" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <div class="ticker">
+            <div class="ticker-track" aria-hidden="true">
+                <span class="ticker-item">Premium Websites &mdash;</span>
+                <span class="ticker-item">For Personal Trainers &mdash;</span>
+                <span class="ticker-item">Search-Friendly Architecture &mdash;</span>
+                <span class="ticker-item">Conversion Focus &mdash;</span>
+                <span class="ticker-item">Premium Websites &mdash;</span>
+                <span class="ticker-item">For Personal Trainers &mdash;</span>
+                <span class="ticker-item">Search-Friendly Architecture &mdash;</span>
+                <span class="ticker-item">Conversion Focus &mdash;</span>
+            </div>
+        </div>
+
+        <!-- PAIN POINTS -->
+        <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
+            <div class="grid-split" style="margin-bottom: 4rem;">
+                <h2 style="font-size: 3.5rem; line-height: 1.1;">Is this<br><i>you?</i></h2>
+                <p style="color: var(--text-muted); text-align: right; max-width: 350px; margin-left: auto;">Many brilliant independent trainers are invisible online. Here is what's holding you back.</p>
+            </div>
+            <div class="grid-3" style="border-top: 1px solid var(--border); padding-top: 2rem; margin-bottom: 4rem;">
+                <div class="card hover-target" style="border:none; padding:2rem 1rem;">
+                    <span class="card-num">01</span>
+                    <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Instagram Reliance</h3>
+                    <p>You rely entirely on the Instagram algorithm for clients, meaning you're one update away from losing reach.</p>
                 </div>
-            </a>
-        </div>
-    </section>
-
-    <div class="ticker">
-        <div class="ticker-track" aria-hidden="true">
-            <span class="ticker-item">Premium Websites &mdash;</span>
-            <span class="ticker-item">For Personal Trainers &mdash;</span>
-            <span class="ticker-item">Search-Friendly Architecture &mdash;</span>
-            <span class="ticker-item">Conversion Focus &mdash;</span>
-            <span class="ticker-item">Premium Websites &mdash;</span>
-            <span class="ticker-item">For Personal Trainers &mdash;</span>
-            <span class="ticker-item">Search-Friendly Architecture &mdash;</span>
-            <span class="ticker-item">Conversion Focus &mdash;</span>
-        </div>
-    </div>
-
-    <!-- PAIN POINTS -->
-    <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
-        <div class="grid-split" style="margin-bottom: 4rem;">
-            <h2 style="font-size: 3.5rem; line-height: 1.1;">Is this<br><i>you?</i></h2>
-            <p style="color: var(--text-muted); text-align: right; max-width: 350px; margin-left: auto;">Many brilliant independent trainers are invisible online. Here is what's holding you back.</p>
-        </div>
-        <div class="grid-3" style="border-top: 1px solid var(--border); padding-top: 2rem; margin-bottom: 4rem;">
-            <div class="card hover-target" style="border:none; padding:2rem 1rem;">
-                <span class="card-num">01</span>
-                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Instagram Reliance</h3>
-                <p>You rely entirely on the Instagram algorithm for clients, meaning you're one update away from losing reach.</p>
-            </div>
-            <div class="card hover-target" style="border:none; border-left:1px solid var(--border); border-right:1px solid var(--border); padding:2rem;">
-                <span class="card-num">02</span>
-                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Zero Google Presence</h3>
-                <p>When clients in your city search for a personal trainer, they find your competitors instead of you.</p>
-            </div>
-            <div class="card hover-target" style="border:none; padding:2rem 1rem;">
-                <span class="card-num">03</span>
-                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Lost Enquiries</h3>
-                <p>You lose leads outside business hours. Your online presence doesn't reflect the premium quality of your coaching.</p>
-            </div>
-        </div>
-        <div style="text-align: center;">
-            <p style="font-family:'Instrument Serif'; font-size: 2.2rem; color: var(--accent); font-style: italic;">That's exactly what we solve.</p>
-        </div>
-    </section>
-
-    <!-- SERVICES -->
-    <section id="services" class="services container" style="border-top:1px solid var(--border); padding-top:4rem;">
-        <div class="grid-split" style="margin-bottom: 4rem;">
-            <h2 style="font-size: 4rem; line-height: 1.1;">Systems that<br><i>scale with you</i></h2>
-            <p style="color: var(--text-muted); text-align: right; max-width: 350px; margin-left: auto;">Every product we ship is designed to get you more clients from day one.</p>
-        </div>
-        <div class="grid-3" style="border-top: 1px solid var(--border); padding-top: 2rem;">
-            <div class="card hover-target" style="border:none; padding:2rem 1rem;">
-                <span class="card-num">01</span>
-                <div style="width:40px;height:40px;border:1px solid var(--accent);border-radius:50%;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;position:relative;">
-                   <div style="position:absolute;width:100%;height:1px;background:var(--accent);"></div>
-                   <div style="position:absolute;width:1px;height:100%;background:var(--accent);"></div>
+                <div class="card hover-target" style="border:none; border-left:1px solid var(--border); border-right:1px solid var(--border); padding:2rem;">
+                    <span class="card-num">02</span>
+                    <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Zero Google Presence</h3>
+                    <p>When clients in your city search for a personal trainer, they find your competitors instead of you.</p>
                 </div>
-                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Website Building</h3>
-                <p>Become the trainer people trust before they even message you. Turn visitors into consultations seamlessly.</p>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
-                    <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">LEARN MORE &rarr;</span>
-                    <div class="badge live">LIVE</div>
+                <div class="card hover-target" style="border:none; padding:2rem 1rem;">
+                    <span class="card-num">03</span>
+                    <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Lost Enquiries</h3>
+                    <p>You lose leads outside business hours. Your online presence doesn't reflect the premium quality of your coaching.</p>
                 </div>
             </div>
-            <div class="card hover-target" style="border:none; border-left:1px solid var(--border); border-right:1px solid var(--border); padding:2rem;">
-                <span class="card-num">02</span>
-                <div style="width:40px;height:40px;border:1px solid var(--accent);border-radius:4px;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;">
-                   <div style="width:4px;height:4px;background:var(--accent);"></div>
+            <div style="text-align: center;">
+                <p style="font-family:'Instrument Serif'; font-size: 2.2rem; color: var(--accent); font-style: italic;">That's exactly what we solve.</p>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services" class="services container" style="border-top:1px solid var(--border); padding-top:4rem;">
+            <div class="grid-split" style="margin-bottom: 4rem;">
+                <h2 style="font-size: 4rem; line-height: 1.1;">Systems that<br><i>scale with you</i></h2>
+                <p style="color: var(--text-muted); text-align: right; max-width: 350px; margin-left: auto;">Every product we ship is designed to get you more clients from day one.</p>
+            </div>
+            <div class="grid-3" style="border-top: 1px solid var(--border); padding-top: 2rem;">
+                <div class="card hover-target" style="border:none; padding:2rem 1rem;">
+                    <span class="card-num">01</span>
+                    <div style="width:40px;height:40px;border:1px solid var(--accent);border-radius:50%;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;position:relative;" aria-hidden="true">
+                       <div style="position:absolute;width:100%;height:1px;background:var(--accent);"></div>
+                       <div style="position:absolute;width:1px;height:100%;background:var(--accent);"></div>
+                    </div>
+                    <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Website Building</h3>
+                    <p>Become the trainer people trust before they even message you. Turn visitors into consultations seamlessly.</p>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
+                        <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">LEARN MORE &rarr;</span>
+                        <div class="badge live">LIVE</div>
+                    </div>
                 </div>
-                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Automated Customer<br>Support</h3>
-                <p>Never miss another enquiry. AI agents qualify your leads and book calls while you are training clients.</p>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
-                    <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">LEARN MORE &rarr;</span>
-                    <div class="badge live">LIVE</div>
+                <div class="card hover-target" style="border:none; border-left:1px solid var(--border); border-right:1px solid var(--border); padding:2rem;">
+                    <span class="card-num">02</span>
+                    <div style="width:40px;height:40px;border:1px solid var(--accent);border-radius:4px;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;" aria-hidden="true">
+                       <div style="width:4px;height:4px;background:var(--accent);"></div>
+                    </div>
+                    <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Automated Customer<br>Support</h3>
+                    <p>Never miss another enquiry. AI agents qualify your leads and book calls while you are training clients.</p>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
+                        <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">LEARN MORE &rarr;</span>
+                        <div class="badge live">LIVE</div>
+                    </div>
+                </div>
+                <div class="card hover-target" style="border:none; padding:2rem;">
+                    <span class="card-num">03</span>
+                    <div style="position:relative;width:40px;height:40px;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;" aria-hidden="true">
+                       <div style="width:16px;height:16px;border:1px solid var(--accent);transform:rotate(45deg);"></div>
+                    </div>
+                    <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Why Choose<br>ShekharSystems</h3>
+                    <ul style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Built for conversions</li>
+                        <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Google-ready architecture</li>
+                        <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Mobile-first design</li>
+                        <li style="display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Direct communication</li>
+                    </ul>
                 </div>
             </div>
-            <div class="card hover-target" style="border:none; padding:2rem;">
-                <span class="card-num">03</span>
-                <div style="position:relative;width:40px;height:40px;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;">
-                   <div style="width:16px;height:16px;border:1px solid var(--accent);transform:rotate(45deg);"></div>
+        </section>
+
+        <!-- WHO WE WORK WITH -->
+        <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
+            <h2 class="eyebrow" style="margin-bottom: 2rem;">Who We Work With</h2>
+            <div class="grid-3">
+                <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
+                    <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Established Trainers</h3>
+                    <p>You have a solid client base but want to streamline onboarding, appear more professional, and charge premium rates.</p>
                 </div>
-                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Why Choose<br>ShekharSystems</h3>
-                <ul style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; list-style: none; padding: 0;">
-                    <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Built for conversions</li>
-                    <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Google-ready architecture</li>
-                    <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Mobile-first design</li>
-                    <li style="display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Direct communication</li>
-                </ul>
+                <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
+                    <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Online Coaches</h3>
+                    <p>You sell digital programs or remote coaching and need a high-converting funnel to automate your sales process.</p>
+                </div>
+                <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
+                    <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Boutique Studios</h3>
+                    <p>You operate a physical studio and need a search-optimized web presence to dominate local Google search results.</p>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- WHO WE WORK WITH -->
-    <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
-        <h2 class="eyebrow" style="margin-bottom: 2rem;">Who We Work With</h2>
-        <div class="grid-3">
-            <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
-                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Established Trainers</h3>
-                <p>You have a solid client base but want to streamline onboarding, appear more professional, and charge premium rates.</p>
+        <!-- INSTAGRAM VS WEBSITE -->
+        <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
+            <div class="grid-split" style="margin-bottom: 4rem;">
+                <h2 style="font-size: 3.5rem; line-height: 1.1;">Build a platform<br><i>you own.</i></h2>
             </div>
-            <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
-                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Online Coaches</h3>
-                <p>You sell digital programs or remote coaching and need a high-converting funnel to automate your sales process.</p>
+            <div class="grid-2">
+                <div class="card hover-target" style="border:1px solid var(--border); padding:3rem; background: var(--panel-2);">
+                    <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 2rem; color: #fff;">Instagram</h3>
+                    <ul style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Algorithm dependent</li>
+                        <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Limited information for clients</li>
+                        <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Impossible to rank on Google</li>
+                        <li style="display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Weak credibility for high-ticket offers</li>
+                    </ul>
+                </div>
+                <div class="card hover-target" style="border:1px solid var(--accent); padding:3rem; background: rgba(200,241,53,0.02);">
+                    <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 2rem; color: var(--accent);">Your Website</h3>
+                    <ul style="color: #e8e6e1; font-size: 1rem; line-height: 1.8; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> You own the platform</li>
+                        <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Searchable locally on Google</li>
+                        <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Available & converting 24/7</li>
+                        <li style="display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Builds immediate premium trust</li>
+                    </ul>
+                </div>
             </div>
-            <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
-                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Boutique Studios</h3>
-                <p>You operate a physical studio and need a search-optimized web presence to dominate local Google search results.</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- INSTAGRAM VS WEBSITE -->
-    <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
-        <div class="grid-split" style="margin-bottom: 4rem;">
-            <h2 style="font-size: 3.5rem; line-height: 1.1;">Build a platform<br><i>you own.</i></h2>
-        </div>
-        <div class="grid-2">
-            <div class="card hover-target" style="border:1px solid var(--border); padding:3rem; background: var(--panel-2);">
-                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 2rem; color: #fff;">Instagram</h3>
-                <ul style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; list-style: none; padding: 0;">
-                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Algorithm dependent</li>
-                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Limited information for clients</li>
-                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Impossible to rank on Google</li>
-                    <li style="display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Weak credibility for high-ticket offers</li>
-                </ul>
+        <section class="manifesto">
+            <div class="sticky-wrap container">
+                <div class="manifesto-text" id="manifestoText">
+                    <span class="line">The best systems</span>
+                    <span class="line accent-line">run silently.</span>
+                    <span class="line">No maintenance.</span>
+                    <span class="line">No babysitting.</span>
+                    <span class="line">Just results.</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-label" id="scrollProgressLabel">0%</div>
+                    <div class="progress-track"><div class="progress-fill" id="scrollProgressFill"></div></div>
+                </div>
             </div>
-            <div class="card hover-target" style="border:1px solid var(--accent); padding:3rem; background: rgba(200,241,53,0.02);">
-                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 2rem; color: var(--accent);">Your Website</h3>
-                <ul style="color: #e8e6e1; font-size: 1rem; line-height: 1.8; list-style: none; padding: 0;">
-                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> You own the platform</li>
-                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Searchable locally on Google</li>
-                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Available & converting 24/7</li>
-                    <li style="display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Builds immediate premium trust</li>
-                </ul>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="manifesto">
-        <div class="sticky-wrap container">
-            <div class="manifesto-text" id="manifestoText">
-                <span class="line">The best systems</span>
-                <span class="line accent-line">run silently.</span>
-                <span class="line">No maintenance.</span>
-                <span class="line">No babysitting.</span>
-                <span class="line">Just results.</span>
+        <section id="process" class="process container">
+            <span class="eyebrow">Methodology</span>
+            <div class="process-list">
+                <div class="process-row hover-target">
+                    <div class="num">01</div>
+                    <h3>Audit</h3>
+                    <p>We analyze your current online presence, identify missed opportunities, and define what your ideal coaching clients are searching for.</p>
+                </div>
+                <div class="process-row hover-target">
+                    <div class="num">02</div>
+                    <h3>Strategy</h3>
+                    <p>We present a tailored plan designed to position you as the premium choice in your local area or online niche.</p>
+                </div>
+                <div class="process-row hover-target">
+                    <div class="num">03</div>
+                    <h3>Build</h3>
+                    <p>We design and develop a fast, elegant website optimized for conversions, integrating booking systems and AI if needed.</p>
+                </div>
+                <div class="process-row hover-target">
+                    <div class="num">04</div>
+                    <h3>Launch</h3>
+                    <p>We handle all technical details, SEO foundations, and domain configuration. Your professional platform goes live flawlessly.</p>
+                </div>
+                <div class="process-row hover-target">
+                    <div class="num">05</div>
+                    <h3>Grow</h3>
+                    <p>With an automated system in place, you spend less time answering repetitive questions and more time training high-value clients.</p>
+                </div>
             </div>
-            <div class="progress-bar-container">
-                <div class="progress-label" id="scrollProgressLabel">0%</div>
-                <div class="progress-track"><div class="progress-fill" id="scrollProgressFill"></div></div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="process" class="process container">
-        <span class="eyebrow">Methodology</span>
-        <div class="process-list">
-            <div class="process-row hover-target">
-                <div class="num">01</div>
-                <h3>Audit</h3>
-                <p>We analyze your current online presence, identify missed opportunities, and define what your ideal coaching clients are searching for.</p>
-            </div>
-            <div class="process-row hover-target">
-                <div class="num">02</div>
-                <h3>Strategy</h3>
-                <p>We present a tailored plan designed to position you as the premium choice in your local area or online niche.</p>
-            </div>
-            <div class="process-row hover-target">
-                <div class="num">03</div>
-                <h3>Build</h3>
-                <p>We design and develop a fast, elegant website optimized for conversions, integrating booking systems and AI if needed.</p>
-            </div>
-            <div class="process-row hover-target">
-                <div class="num">04</div>
-                <h3>Launch</h3>
-                <p>We handle all technical details, SEO foundations, and domain configuration. Your professional platform goes live flawlessly.</p>
-            </div>
-            <div class="process-row hover-target">
-                <div class="num">05</div>
-                <h3>Grow</h3>
-                <p>With an automated system in place, you spend less time answering repetitive questions and more time training high-value clients.</p>
-            </div>
-        </div>
-    </section>
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="cta container">
+            <div class="grid-split" style="align-items: start; margin-bottom: 2rem;">
+                <div>
+                    <span class="eyebrow">Get In Touch</span>
+                    <h2>Ready to build the<br>website your business<br><i>deserves?</i></h2>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; max-width: 400px; margin-bottom: 2rem;">Let's create a website that works while you're training clients.</p>
+                    <div class="cta-btns" style="margin-bottom: 3rem;">
+                        <a href="mailto:utkarsh@shekharsystems.com" class="btn btn-accent hover-target">Book Free Strategy Call</a>
+                        <a href="mailto:utkarsh@shekharsystems.com" class="btn hover-target">Email Me</a>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-val">SEO</div>
+                            <div class="stat-label">Locally Optimized</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-val">24/7</div>
+                            <div class="stat-label">Lead Generation</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-val">100%</div>
+                            <div class="stat-label">Custom Built</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-val">∞</div>
+                            <div class="stat-label">Scalability</div>
+                        </div>
+                    </div>
+                </div>
 
-    <section id="contact" class="cta container grid-split">
-        <div>
-            <h2>Ready to build the<br>website your business<br><i>deserves?</i></h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; max-width: 400px; margin-bottom: 2rem;">Let's create a website that works while you're training clients.</p>
-            <div class="cta-btns">
-                <a href="#contact" class="btn btn-accent hover-target">Book Free Strategy Call</a>
-                <a href="mailto:utkarsh@shekharsystems.com" class="btn hover-target">Email Me</a>
+                <!-- Premium Contact Panel -->
+                <div id="contact-card" class="contact-card hover-target">
+                    <div class="contact-card-header">
+                        <h3 class="contact-card-title">Contact</h3>
+                        <div class="contact-card-status">
+                            <span class="pulse-dot"></span> Direct Channel
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-label">Email</span>
+                        <a href="mailto:utkarsh@shekharsystems.com" class="contact-value">utkarsh@shekharsystems.com</a>
+                    </div>
+                    <div class="contact-phone-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                        <div class="contact-item">
+                            <span class="contact-label">India</span>
+                            <a href="tel:+918549886645" class="contact-value" style="font-family: 'IBM Plex Mono', monospace;">+91 8549886645</a>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label">US Enquiries</span>
+                            <a href="tel:+18312083753" class="contact-value" style="font-family: 'IBM Plex Mono', monospace;">+1 (831) 208-3753</a>
+                        </div>
+                    </div>
+                    <div class="contact-note">
+                        Replies within 24 hours.<br>
+                        No pressure.<br>
+                        No sales pitch.<br>
+                        Just a quick conversation to see if we're a good fit.
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-val">SEO</div>
-                <div class="stat-label">Locally Optimized</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val">24/7</div>
-                <div class="stat-label">Lead Generation</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val">100%</div>
-                <div class="stat-label">Custom Built</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val">∞</div>
-                <div class="stat-label">Scalability</div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- FAQ -->
-    <section class="container" style="padding: 4rem 4vw 8rem 4vw; max-width: 800px; margin: 0 auto;">
-        <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 3rem; font-family: 'Instrument Serif';">Frequently Asked Questions</h2>
-        <div style="border-top: 1px solid var(--border);">
-            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
-                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Do I need to write the content?</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">No. We help you structure your offer and write conversion-focused copy that sounds authentic to you.</p>
+        <!-- FAQ -->
+        <section id="faq" class="container" style="padding: 4rem 4vw 8rem 4vw; max-width: 800px; margin: 0 auto;">
+            <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 3rem; font-family: 'Instrument Serif';">Frequently Asked Questions</h2>
+            <div style="border-top: 1px solid var(--border);">
+                <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                    <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Do I need to write the content?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">No. We help you structure your offer and write conversion-focused copy that sounds authentic to you.</p>
+                </div>
+                <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                    <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Can you help me appear on Google?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Yes. Our sites use Google-ready architecture tailored for local search, though ranking timelines depend on your local competition.</p>
+                </div>
+                <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                    <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Will my website work on phones?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Absolutely. Mobile-first design is standard, knowing most potential clients will find you via their phones.</p>
+                </div>
+                <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                    <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Can I add online booking later?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Yes, our systems are highly scalable. We can integrate third-party scheduling or add automated AI support at any time.</p>
+                </div>
+                <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                    <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">What if I don't have professional photos?</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">While high-quality imagery helps, our elegant typography and minimal layout can elevate standard photos to still feel premium.</p>
+                </div>
             </div>
-            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
-                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Can you help me appear on Google?</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Yes. Our sites use Google-ready architecture tailored for local search, though ranking timelines depend on your local competition.</p>
-            </div>
-            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
-                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Will my website work on phones?</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Absolutely. Mobile-first design is standard, knowing most potential clients will find you via their phones.</p>
-            </div>
-            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
-                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Can I add online booking later?</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Yes, our systems are highly scalable. We can integrate third-party scheduling or add automated AI support at any time.</p>
-            </div>
-            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
-                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">What if I don't have professional photos?</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">While high-quality imagery helps, our elegant typography and minimal layout can elevate standard photos to still feel premium.</p>
-            </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <footer>
-        <div class="nav-logo" style="font-family: 'Instrument Serif', serif; font-size: 1.2rem;">
-            <svg class="nav-star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:14px;height:14px;color:var(--text-muted)">
-              <line x1="12" y1="3" x2="12" y2="21" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="5.636" y1="5.636" x2="18.364" y2="18.364" />
-              <line x1="5.636" y1="18.364" x2="18.364" y2="5.636" />
-            </svg>
-            ShekharSystems
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div>
+                    <a href="#hero" class="nav-logo hover-target" style="font-family: 'Instrument Serif', serif; font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem;" aria-label="ShekharSystems Home">
+                        <svg class="nav-star" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:16px;height:16px;color:var(--accent);" aria-hidden="true">
+                          <line x1="12" y1="3" x2="12" y2="21" />
+                          <line x1="3" y1="12" x2="21" y2="12" />
+                          <line x1="5.636" y1="5.636" x2="18.364" y2="18.364" />
+                          <line x1="5.636" y1="18.364" x2="18.364" y2="5.636" />
+                        </svg>
+                        ShekharSystems
+                    </a>
+                    <p class="footer-tagline">Premium websites for personal trainers.</p>
+                </div>
+            </div>
+            <div class="footer-details-grid">
+                <div class="footer-col">
+                    <span class="footer-col-title">Email</span>
+                    <a href="mailto:utkarsh@shekharsystems.com" class="footer-col-content hover-target">utkarsh@shekharsystems.com</a>
+                </div>
+                <div class="footer-col">
+                    <span class="footer-col-title">India</span>
+                    <a href="tel:+918549886645" class="footer-col-content hover-target" style="font-family: 'IBM Plex Mono', monospace;">+91 8549886645</a>
+                </div>
+                <div class="footer-col">
+                    <span class="footer-col-title">US Enquiries</span>
+                    <a href="tel:+18312083753" class="footer-col-content hover-target" style="font-family: 'IBM Plex Mono', monospace;">+1 (831) 208-3753</a>
+                </div>
+            </div>
         </div>
-        <div class="footer-links" style="display: flex; gap: 2.5rem; align-items: flex-start;">
-            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
-                <span class="eyebrow" style="margin: 0; font-size: 0.70rem;">Email</span>
-                <a href="mailto:utkarsh@shekharsystems.com" class="hover-target" style="font-family: 'IBM Plex Mono'; font-size: 0.9rem; color: #fff;">utkarsh@shekharsystems.com</a>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
-                <span class="eyebrow" style="margin: 0; font-size: 0.70rem;">India</span>
-                <span style="font-family: 'IBM Plex Mono'; font-size: 0.9rem; color: #fff;">+91 8549886645</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
-                <span class="eyebrow" style="margin: 0; font-size: 0.70rem;">US Enquiries</span>
-                <span style="font-family: 'IBM Plex Mono'; font-size: 0.9rem; color: #fff;">+1 (831) 208-3753</span>
-            </div>
+        <div class="footer-bottom">
+            <div>&copy; 2026 ShekharSystems</div>
+            <div style="font-style: italic; color: var(--text-muted); font-family: 'Instrument Serif', serif; font-size: 1.1rem;">The best systems run silently.</div>
         </div>
-        <div style="font-family: 'IBM Plex Mono'; font-size: 0.8rem;">&copy; 2026 ShekharSystems</div>
     </footer>
 
     <script>
+        // ENFORCE SCROLL POSITION ON LOAD
+        function setInitialScrollPosition() {
+            if (window.location.hash) {
+                const target = document.querySelector(window.location.hash);
+                if (target) {
+                    const navHeight = document.querySelector('nav')?.offsetHeight || 80;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                    return;
+                }
+            }
+            window.scrollTo(0, 0);
+        }
+
+        if (document.readyState === 'complete') {
+            setInitialScrollPosition();
+        } else {
+            window.addEventListener('load', setInitialScrollPosition);
+        }
+
+        // SMOOTH SCROLLING FOR NAVIGATION LINKS
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#' || !targetId) return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    const navHeight = document.querySelector('nav')?.offsetHeight || 80;
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - navHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                    if (history.pushState) {
+                        history.pushState(null, null, targetId);
+                    }
+                }
+            });
+        });
+
+        // ACTIVE NAVIGATION LINK HIGHLIGHTING ON SCROLL
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = document.querySelectorAll('section[id]');
+
+        function updateActiveNav() {
+            const scrollPos = window.pageYOffset + (document.querySelector('nav')?.offsetHeight || 80) + 120;
+            sections.forEach(section => {
+                const top = section.offsetTop;
+                const height = section.offsetHeight;
+                const id = section.getAttribute('id');
+                if (scrollPos >= top && scrollPos < top + height) {
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === '#' + id) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        }
+        window.addEventListener('scroll', updateActiveNav, { passive: true });
+        updateActiveNav();
+
         // CURSOR
         const cursorDot = document.getElementById('cursor-dot');
         const cursorRing = document.getElementById('cursor-ring');
@@ -737,17 +1014,19 @@
         function updateClock() {
             const now = new Date();
             const time = now.toLocaleTimeString('en-US', { hour12: false });
-            document.getElementById('live-clock').textContent = time + ' UTC';
+            const clockEl = document.getElementById('live-clock');
+            if (clockEl) clockEl.textContent = time + ' UTC';
         }
         setInterval(updateClock, 1000);
         updateClock();
 
         // BACKGROUND CANVAS (Noise dots)
         const bgCanvas = document.getElementById('bgCanvas');
-        const bgCtx = bgCanvas.getContext('2d');
+        const bgCtx = bgCanvas ? bgCanvas.getContext('2d') : null;
         let bgDots = [];
         
         function initBgCanvas() {
+            if (!bgCanvas) return;
             bgCanvas.width = window.innerWidth;
             bgCanvas.height = window.innerHeight;
             bgDots = [];
@@ -774,6 +1053,7 @@
 
         let timeOffset = 0;
         function renderBg() {
+            if (!bgCtx) return;
             bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
             bgCtx.fillStyle = 'rgba(200, 241, 53, 0.15)';
             timeOffset += 0.01;
@@ -807,14 +1087,14 @@
 
         // HERO CANVAS (Cosmic Starfield Depth)
         const heroCanvas = document.getElementById('heroCanvas');
-        const heroCtx = heroCanvas.getContext('2d');
+        const heroCtx = heroCanvas ? heroCanvas.getContext('2d') : null;
         
         let stars = [];
         const numStars = 500;
         
         function initHeroCanvas() {
+            if (!heroCanvas || !heroCanvas.parentElement) return;
             const rect = heroCanvas.parentElement.getBoundingClientRect();
-            // High res canvas
             heroCanvas.width = rect.width * 2;
             heroCanvas.height = rect.height * 2;
             
@@ -831,7 +1111,7 @@
         initHeroCanvas();
 
         function renderHero() {
-            // Smooth solid background to remove trails
+            if (!heroCtx) return;
             heroCtx.fillStyle = 'rgba(13, 13, 13, 1)';
             heroCtx.fillRect(0, 0, heroCanvas.width, heroCanvas.height);
             
@@ -840,7 +1120,7 @@
             
             for(let i=0; i<numStars; i++) {
                 let star = stars[i];
-                star.z -= 0.6; // Extremely peaceful flow speed
+                star.z -= 0.6;
                 
                 if(star.z <= 0) {
                     star.z = 2000;
@@ -855,7 +1135,6 @@
                 let opacity = Math.max(0, 1 - (star.z / 2000));
                 
                 heroCtx.beginPath();
-                // Subtly larger dots for cosmic elegance
                 heroCtx.arc(projX, projY, 1.2 * scale, 0, Math.PI * 2);
                 heroCtx.fillStyle = `rgba(200, 241, 53, ${opacity * 0.4})`;
                 heroCtx.fill();
@@ -866,34 +1145,38 @@
         renderHero();
 
         // GSAP SCROLL MANIFESTO
-        gsap.registerPlugin(ScrollTrigger);
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
 
-        const lines = document.querySelectorAll('.line');
-        const totalLines = lines.length;
+            const lines = document.querySelectorAll('.line');
+            const totalLines = lines.length;
 
-        ScrollTrigger.create({
-            trigger: ".manifesto",
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 0.1,
-            onUpdate: (self) => {
-                const progress = self.progress;
-                document.getElementById('scrollProgressFill').style.width = `${progress * 100}%`;
-                document.getElementById('scrollProgressLabel').textContent = `${Math.round(progress * 100)}%`;
+            ScrollTrigger.create({
+                trigger: ".manifesto",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.1,
+                onUpdate: (self) => {
+                    const progress = self.progress;
+                    const fillEl = document.getElementById('scrollProgressFill');
+                    const labelEl = document.getElementById('scrollProgressLabel');
+                    if (fillEl) fillEl.style.width = `${progress * 100}%`;
+                    if (labelEl) labelEl.textContent = `${Math.round(progress * 100)}%`;
 
-                const activeIdx = Math.floor(progress * totalLines);
-                
-                lines.forEach((line, idx) => {
-                    if (idx === activeIdx || (idx === totalLines - 1 && activeIdx >= totalLines)) {
-                        line.classList.add('active');
-                        line.style.color = line.classList.contains('accent-line') ? 'var(--accent)' : '#fff';
-                    } else {
-                        line.classList.remove('active');
-                        line.style.color = 'rgba(255,255,255,0.06)';
-                    }
-                });
-            }
-        });
+                    const activeIdx = Math.floor(progress * totalLines);
+                    
+                    lines.forEach((line, idx) => {
+                        if (idx === activeIdx || (idx === totalLines - 1 && activeIdx >= totalLines)) {
+                            line.classList.add('active');
+                            line.style.color = line.classList.contains('accent-line') ? 'var(--accent)' : '#fff';
+                        } else {
+                            line.classList.remove('active');
+                            line.style.color = 'rgba(255,255,255,0.06)';
+                        }
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html> 
