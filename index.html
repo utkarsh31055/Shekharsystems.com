@@ -3,7 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShekharSystems — AI & Web Studio</title>
+    <title>Premium Websites for Personal Trainers | ShekharSystems</title>
+    <meta name="description" content="We build premium, SEO-ready websites for personal trainers that build trust, convert visitors into consultations, and automate enquiries.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://shekharsystems.com">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Premium Websites for Personal Trainers | ShekharSystems">
+    <meta property="og:description" content="Premium, SEO-ready websites and AI support systems that help personal trainers get more clients.">
+    <meta property="og:url" content="https://shekharsystems.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Premium Websites for Personal Trainers | ShekharSystems">
+    <meta name="twitter:description" content="Premium, SEO-ready websites and AI support systems that help personal trainers get more clients.">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "ShekharSystems",
+      "url": "https://shekharsystems.com",
+      "description": "Premium website development and AI automation for personal trainers and fitness coaches."
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -70,6 +89,11 @@
             grid-template-columns: 0.8fr 1.2fr;
             gap: 3rem;
             align-items: center;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
         }
         .relative { position: relative; }
 
@@ -248,11 +272,79 @@
         .footer-links a:hover { color: var(--text-main); }
 
         @media (max-width: 1024px) {
-            .grid-split, .grid-3 { grid-template-columns: 1fr; }
+            .grid-split, .grid-3, .grid-2 { grid-template-columns: 1fr; }
             .hero { padding-top: 8rem; }
             .hero h1 { font-size: 4rem; }
             .process-row { grid-template-columns: 1fr; gap: 1rem; }
             .manifesto-text { font-size: 2.5rem; }
+        }
+
+        /* MOBILE OPTIMIZATIONS (untouched on desktop) */
+        @media (hover: none) and (pointer: coarse) {
+            * { cursor: auto !important; }
+            #cursor-dot, #cursor-ring { display: none !important; }
+        }
+
+        @media (max-width: 768px) {
+            /* Typography */
+            h1[style*="font-size: 4rem"] { font-size: 2.5rem !important; line-height: 1.1 !important; }
+            h2[style*="font-size: 4rem"], h2[style*="font-size: 3.5rem"] { font-size: 2.2rem !important; }
+            h2[style*="font-size: 2.5rem"] { font-size: 1.8rem !important; margin-bottom: 2rem !important; }
+            h3[style*="font-size: 2rem"] { font-size: 1.5rem !important; }
+            h3[style*="font-size: 1.8rem"] { font-size: 1.4rem !important; }
+            
+            /* Navbar */
+            .nav-links { display: none !important; }
+            .nav-logo { font-size: 1.2rem !important; }
+            nav .btn { font-size: 0.75rem !important; padding: 0.7rem 1rem !important; }
+            
+            /* Section Spacing */
+            section.container[style*="padding: 6rem"], 
+            section.container[style*="padding: 4rem"],
+            section#services { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+            section#services { padding-top: 3rem !important; }
+            
+            .grid-split[style*="margin-bottom: 4rem"], 
+            .grid-3[style*="margin-bottom: 4rem"],
+            .container[style*="margin-bottom: 4rem"] { margin-bottom: 2rem !important; }
+            .grid-split, .grid-3, .grid-2 { gap: 1.5rem !important; }
+            
+            /* Cards */
+            .card[style*="padding:3rem"] { padding: 1.5rem !important; }
+            .card[style*="padding:2rem"] { padding: 1.5rem !important; }
+            
+            /* Lists & Text */
+            ul[style*="max-width: 480px"], ul[style*="color: #e8e6e1"] { font-size: 0.95rem !important; }
+            .ticker-item { font-size: 1.2rem !important; }
+            .manifesto-text { font-size: 2rem !important; padding: 0 1rem; }
+            
+            /* Hero Layout */
+            .hero { flex-direction: column !important; padding-top: 0 !important; }
+            .hero-left { 
+                flex: none !important; 
+                width: 100% !important; 
+                padding-top: 10rem !important; 
+                padding-bottom: 4rem !important;
+                padding-left: 4vw !important;
+            }
+            .hero-right { 
+                flex: none !important; 
+                width: 100% !important; 
+                height: 60vh !important; 
+                min-height: 400px !important; 
+                border-left: none !important; 
+                border-top: 1px solid var(--border) !important; 
+            }
+            .panel-top { padding-top: 2rem !important; height: 100% !important; }
+            
+            /* CTA / Stats */
+            .cta h2 { font-size: 2.2rem !important; margin-bottom: 1.5rem !important; }
+            .stats-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+            .stat-item { padding-left: 1rem !important; border-left-width: 2px !important; }
+            
+            /* Footer */
+            footer { flex-direction: column !important; align-items: flex-start !important; gap: 2.5rem !important; padding-bottom: 4rem !important; }
+            .footer-links { flex-direction: column !important; gap: 1.5rem !important; }
         }
     </style>
 </head>
@@ -275,25 +367,30 @@
             </svg>
             ShekharSystems
         </div>
-        <div class="nav-links" style="font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; gap: 3.5rem;">
+        <div class="nav-links" style="font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; gap: 3.5rem;" aria-label="Main Navigation">
             <a href="#services" class="hover-target">Services</a>
             <a href="#process" class="hover-target">Process</a>
-            <a href="#about" class="hover-target">Contact</a>
+            <a href="#contact" class="hover-target">Contact</a>
         </div>
-        <a href="#contact" class="btn hover-target" style="background: var(--accent); color: #000; border-radius: 2px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; padding: 0.8rem 1.6rem; border: none;">GET STARTED</a>
+        <a href="#contact" class="btn hover-target" style="background: var(--accent); color: #000; border-radius: 2px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; padding: 0.8rem 1.6rem; border: none;" aria-label="Book Strategy Call">BOOK STRATEGY CALL</a>
     </nav>
 
     <section class="hero">
         <div class="hero-left">
             <div style="display:flex;gap:10px;margin-bottom:1.5rem">
-                <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">AI SYSTEMS</span>
-                <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">WEB STUDIO</span>
+                <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">PREMIUM WEBSITES</span>
+                <span class="eyebrow" style="border:1px solid var(--border);padding:4px 10px;margin:0">FOR PERSONAL TRAINERS</span>
             </div>
-            <h1>Websites &<br>Automations that<br><i>work for you.</i></h1>
-            <p style="margin-bottom: 2rem; max-width: 450px;">We build premium websites and AI-powered customer support systems for businesses that want results, not just deliverables.</p>
+            <h1 style="font-size: 4rem;">Premium websites that help personal trainers<br><i>get more clients.</i></h1>
+            <ul style="margin-bottom: 2.5rem; max-width: 480px; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; list-style: none; padding: 0;">
+                <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Build immediate credibility and trust.</li>
+                <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Search-friendly architecture for local discovery.</li>
+                <li style="margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Convert visitors into booked consultations.</li>
+                <li style="display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Automate enquiry handling with AI integration.</li>
+            </ul>
             <div style="display:flex; gap:1rem;">
-                <a href="#services" class="btn hover-target" style="background:#e8e6e1;color:#0d0d0d;border:none;">VIEW SERVICES</a>
-                <a href="#pricing" class="btn hover-target" style="background:transparent;color:var(--text-muted);">SEE PRICING</a>
+                <a href="#contact" class="btn hover-target" style="background:#e8e6e1;color:#0d0d0d;border:none;">Book a Free Strategy Call</a>
+                <a href="#services" class="btn hover-target" style="background:transparent;color:var(--text-muted);">See How It Works</a>
             </div>
         </div>
         <div class="hero-right">
@@ -329,22 +426,51 @@
     </section>
 
     <div class="ticker">
-        <div class="ticker-track">
-            <span class="ticker-item">Design Systems &mdash;</span>
-            <span class="ticker-item">AI Agents &mdash;</span>
-            <span class="ticker-item">Web Architecture &mdash;</span>
-            <span class="ticker-item">Conversion Optimisation &mdash;</span>
-            <span class="ticker-item">Design Systems &mdash;</span>
-            <span class="ticker-item">AI Agents &mdash;</span>
-            <span class="ticker-item">Web Architecture &mdash;</span>
-            <span class="ticker-item">Conversion Optimisation &mdash;</span>
+        <div class="ticker-track" aria-hidden="true">
+            <span class="ticker-item">Premium Websites &mdash;</span>
+            <span class="ticker-item">For Personal Trainers &mdash;</span>
+            <span class="ticker-item">Search-Friendly Architecture &mdash;</span>
+            <span class="ticker-item">Conversion Focus &mdash;</span>
+            <span class="ticker-item">Premium Websites &mdash;</span>
+            <span class="ticker-item">For Personal Trainers &mdash;</span>
+            <span class="ticker-item">Search-Friendly Architecture &mdash;</span>
+            <span class="ticker-item">Conversion Focus &mdash;</span>
         </div>
     </div>
 
+    <!-- PAIN POINTS -->
+    <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
+        <div class="grid-split" style="margin-bottom: 4rem;">
+            <h2 style="font-size: 3.5rem; line-height: 1.1;">Is this<br><i>you?</i></h2>
+            <p style="color: var(--text-muted); text-align: right; max-width: 350px; margin-left: auto;">Many brilliant independent trainers are invisible online. Here is what's holding you back.</p>
+        </div>
+        <div class="grid-3" style="border-top: 1px solid var(--border); padding-top: 2rem; margin-bottom: 4rem;">
+            <div class="card hover-target" style="border:none; padding:2rem 1rem;">
+                <span class="card-num">01</span>
+                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Instagram Reliance</h3>
+                <p>You rely entirely on the Instagram algorithm for clients, meaning you're one update away from losing reach.</p>
+            </div>
+            <div class="card hover-target" style="border:none; border-left:1px solid var(--border); border-right:1px solid var(--border); padding:2rem;">
+                <span class="card-num">02</span>
+                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Zero Google Presence</h3>
+                <p>When clients in your city search for a personal trainer, they find your competitors instead of you.</p>
+            </div>
+            <div class="card hover-target" style="border:none; padding:2rem 1rem;">
+                <span class="card-num">03</span>
+                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Lost Enquiries</h3>
+                <p>You lose leads outside business hours. Your online presence doesn't reflect the premium quality of your coaching.</p>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <p style="font-family:'Instrument Serif'; font-size: 2.2rem; color: var(--accent); font-style: italic;">That's exactly what we solve.</p>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
     <section id="services" class="services container" style="border-top:1px solid var(--border); padding-top:4rem;">
         <div class="grid-split" style="margin-bottom: 4rem;">
             <h2 style="font-size: 4rem; line-height: 1.1;">Systems that<br><i>scale with you</i></h2>
-            <p style="color: var(--text-muted); text-align: right; max-width: 350px; margin-left: auto;">Every product we ship is engineered to generate value from day one — not sit on a server.</p>
+            <p style="color: var(--text-muted); text-align: right; max-width: 350px; margin-left: auto;">Every product we ship is designed to get you more clients from day one.</p>
         </div>
         <div class="grid-3" style="border-top: 1px solid var(--border); padding-top: 2rem;">
             <div class="card hover-target" style="border:none; padding:2rem 1rem;">
@@ -354,7 +480,7 @@
                    <div style="position:absolute;width:1px;height:100%;background:var(--accent);"></div>
                 </div>
                 <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Website Building</h3>
-                <p>Premium, conversion-focused websites engineered for speed, credibility, and growth. From landing pages to full multi-page builds.</p>
+                <p>Become the trainer people trust before they even message you. Turn visitors into consultations seamlessly.</p>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
                     <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">LEARN MORE &rarr;</span>
                     <div class="badge live">LIVE</div>
@@ -366,24 +492,70 @@
                    <div style="width:4px;height:4px;background:var(--accent);"></div>
                 </div>
                 <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Automated Customer<br>Support</h3>
-                <p>AI agents that handle enquiries, qualify leads, book calls, and resolve support tickets — 24/7, without hiring a team.</p>
+                <p>Never miss another enquiry. AI agents qualify your leads and book calls while you are training clients.</p>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
                     <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">LEARN MORE &rarr;</span>
                     <div class="badge live">LIVE</div>
                 </div>
             </div>
-            <div class="card dimmed" style="border:none; padding:2rem;">
+            <div class="card hover-target" style="border:none; padding:2rem;">
                 <span class="card-num">03</span>
                 <div style="position:relative;width:40px;height:40px;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;">
-                   <div style="position:absolute;width:100%;height:1px;background:var(--accent);"></div>
-                   <div style="position:absolute;width:1px;height:100%;background:var(--accent);"></div>
+                   <div style="width:16px;height:16px;border:1px solid var(--accent);transform:rotate(45deg);"></div>
                 </div>
-                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">More Coming Soon</h3>
-                <p>We're building new service offerings. Follow us or reach out to get early access.</p>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;">
-                    <span style="font-family:'IBM Plex Mono';font-size:0.7rem;color:var(--text-muted);letter-spacing:1px">IN DEVELOPMENT</span>
-                    <div class="badge">SOON</div>
-                </div>
+                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 1.5rem;">Why Choose<br>ShekharSystems</h3>
+                <ul style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Built for conversions</li>
+                    <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Google-ready architecture</li>
+                    <li style="margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Mobile-first design</li>
+                    <li style="display: flex; align-items: flex-start; gap: 0.5rem;"><span style="color: var(--accent);">&bull;</span> Direct communication</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHO WE WORK WITH -->
+    <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
+        <h2 class="eyebrow" style="margin-bottom: 2rem;">Who We Work With</h2>
+        <div class="grid-3">
+            <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
+                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Established Trainers</h3>
+                <p>You have a solid client base but want to streamline onboarding, appear more professional, and charge premium rates.</p>
+            </div>
+            <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
+                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Online Coaches</h3>
+                <p>You sell digital programs or remote coaching and need a high-converting funnel to automate your sales process.</p>
+            </div>
+            <div class="card hover-target" style="border:1px solid var(--border); padding:2rem 1.5rem; background: var(--panel-1);">
+                <h3 style="font-family:'Instrument Serif'; font-size: 1.8rem; margin-bottom: 1rem;">Boutique Studios</h3>
+                <p>You operate a physical studio and need a search-optimized web presence to dominate local Google search results.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- INSTAGRAM VS WEBSITE -->
+    <section class="container" style="padding: 6rem 4vw; border-top: 1px solid var(--border);">
+        <div class="grid-split" style="margin-bottom: 4rem;">
+            <h2 style="font-size: 3.5rem; line-height: 1.1;">Build a platform<br><i>you own.</i></h2>
+        </div>
+        <div class="grid-2">
+            <div class="card hover-target" style="border:1px solid var(--border); padding:3rem; background: var(--panel-2);">
+                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 2rem; color: #fff;">Instagram</h3>
+                <ul style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; list-style: none; padding: 0;">
+                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Algorithm dependent</li>
+                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Limited information for clients</li>
+                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Impossible to rank on Google</li>
+                    <li style="display: flex; align-items: center; gap: 1rem;"><span style="color: #ff4757; font-size: 1.2rem;">&times;</span> Weak credibility for high-ticket offers</li>
+                </ul>
+            </div>
+            <div class="card hover-target" style="border:1px solid var(--accent); padding:3rem; background: rgba(200,241,53,0.02);">
+                <h3 style="font-family:'Instrument Serif'; font-size: 2rem; margin-bottom: 2rem; color: var(--accent);">Your Website</h3>
+                <ul style="color: #e8e6e1; font-size: 1rem; line-height: 1.8; list-style: none; padding: 0;">
+                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> You own the platform</li>
+                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Searchable locally on Google</li>
+                    <li style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Available & converting 24/7</li>
+                    <li style="display: flex; align-items: center; gap: 1rem;"><span style="color: var(--accent); font-size: 1.2rem;">&check;</span> Builds immediate premium trust</li>
+                </ul>
             </div>
         </div>
     </section>
@@ -409,51 +581,84 @@
         <div class="process-list">
             <div class="process-row hover-target">
                 <div class="num">01</div>
-                <h3>Discovery Call</h3>
-                <p>We learn your goals, pain points, and what success looks like. Free, no commitment, same-day availability.</p>
+                <h3>Audit</h3>
+                <p>We analyze your current online presence, identify missed opportunities, and define what your ideal coaching clients are searching for.</p>
             </div>
             <div class="process-row hover-target">
                 <div class="num">02</div>
-                <h3>Proposal & Scope</h3>
-                <p>You get a clear proposal — scope, timeline, pricing. No hidden fees. You approve before anything starts.</p>
+                <h3>Strategy</h3>
+                <p>We present a tailored plan designed to position you as the premium choice in your local area or online niche.</p>
             </div>
             <div class="process-row hover-target">
                 <div class="num">03</div>
-                <h3>Build & Review</h3>
-                <p>We build fast and share progress. You review, give feedback, we refine. You're always in the loop.</p>
+                <h3>Build</h3>
+                <p>We design and develop a fast, elegant website optimized for conversions, integrating booking systems and AI if needed.</p>
             </div>
             <div class="process-row hover-target">
                 <div class="num">04</div>
-                <h3>Launch & Support</h3>
-                <p>We handle the go-live. Then stay on hand for tweaks, updates, and anything that comes up after.</p>
+                <h3>Launch</h3>
+                <p>We handle all technical details, SEO foundations, and domain configuration. Your professional platform goes live flawlessly.</p>
+            </div>
+            <div class="process-row hover-target">
+                <div class="num">05</div>
+                <h3>Grow</h3>
+                <p>With an automated system in place, you spend less time answering repetitive questions and more time training high-value clients.</p>
             </div>
         </div>
     </section>
 
     <section id="contact" class="cta container grid-split">
         <div>
-            <h2>Ready to <i>upgrade</i><br>your foundation?</h2>
-            <div class="cta-btns mt-4">
-                <a href="#" class="btn btn-accent hover-target">Book Intro Call</a>
-                <a href="#" class="btn hover-target">Email Us</a>
+            <h2>Ready to build the<br>website your business<br><i>deserves?</i></h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; max-width: 400px; margin-bottom: 2rem;">Let's create a website that works while you're training clients.</p>
+            <div class="cta-btns">
+                <a href="#contact" class="btn btn-accent hover-target">Book Free Strategy Call</a>
+                <a href="mailto:utkarsh@shekharsystems.com" class="btn hover-target">Email Me</a>
             </div>
         </div>
         <div class="stats-grid">
             <div class="stat-item">
-                <div class="stat-val">24h</div>
-                <div class="stat-label">Response Time</div>
+                <div class="stat-val">SEO</div>
+                <div class="stat-label">Locally Optimized</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val">24/7</div>
+                <div class="stat-label">Lead Generation</div>
             </div>
             <div class="stat-item">
                 <div class="stat-val">100%</div>
-                <div class="stat-label">Satisfaction</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val">2wk</div>
-                <div class="stat-label">Avg Delivery</div>
+                <div class="stat-label">Custom Built</div>
             </div>
             <div class="stat-item">
                 <div class="stat-val">∞</div>
                 <div class="stat-label">Scalability</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="container" style="padding: 4rem 4vw 8rem 4vw; max-width: 800px; margin: 0 auto;">
+        <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 3rem; font-family: 'Instrument Serif';">Frequently Asked Questions</h2>
+        <div style="border-top: 1px solid var(--border);">
+            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Do I need to write the content?</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">No. We help you structure your offer and write conversion-focused copy that sounds authentic to you.</p>
+            </div>
+            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Can you help me appear on Google?</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Yes. Our sites use Google-ready architecture tailored for local search, though ranking timelines depend on your local competition.</p>
+            </div>
+            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Will my website work on phones?</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Absolutely. Mobile-first design is standard, knowing most potential clients will find you via their phones.</p>
+            </div>
+            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">Can I add online booking later?</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Yes, our systems are highly scalable. We can integrate third-party scheduling or add automated AI support at any time.</p>
+            </div>
+            <div class="hover-target" style="padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding-left 0.3s; cursor: none;">
+                <h3 style="font-family:'Instrument Sans'; font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff;">What if I don't have professional photos?</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">While high-quality imagery helps, our elegant typography and minimal layout can elevate standard photos to still feel premium.</p>
             </div>
         </div>
     </section>
@@ -468,12 +673,21 @@
             </svg>
             ShekharSystems
         </div>
-        <div class="footer-links">
-            <a href="#" class="hover-target">Twitter X</a>
-            <a href="#" class="hover-target">LinkedIn</a>
-            <a href="#" class="hover-target">Dribbble</a>
+        <div class="footer-links" style="display: flex; gap: 2.5rem; align-items: flex-start;">
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <span class="eyebrow" style="margin: 0; font-size: 0.70rem;">Email</span>
+                <a href="mailto:utkarsh@shekharsystems.com" class="hover-target" style="font-family: 'IBM Plex Mono'; font-size: 0.9rem; color: #fff;">utkarsh@shekharsystems.com</a>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <span class="eyebrow" style="margin: 0; font-size: 0.70rem;">India</span>
+                <span style="font-family: 'IBM Plex Mono'; font-size: 0.9rem; color: #fff;">+91 8549886645</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <span class="eyebrow" style="margin: 0; font-size: 0.70rem;">US Enquiries</span>
+                <span style="font-family: 'IBM Plex Mono'; font-size: 0.9rem; color: #fff;">+1 (831) 208-3753</span>
+            </div>
         </div>
-        <div>&copy; 2026 Studio. All rights reserved.</div>
+        <div style="font-family: 'IBM Plex Mono'; font-size: 0.8rem;">&copy; 2026 ShekharSystems</div>
     </footer>
 
     <script>
